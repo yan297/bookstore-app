@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './css/styles.css';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -11,8 +12,8 @@ const Cart = () => {
   }, []);
 
   const fetchCartItems = async () => {
-    const token = localStorage.getItem('accessToken');
-  
+    const token = localStorage.getItem('token');
+    //console.log(token);
     try {
       const response = await fetch('http://localhost:4000/users/cartItems', {
         method: 'GET',
@@ -39,8 +40,9 @@ const Cart = () => {
   const calculateTotalPrice = async (items) => {
     try {
       let totalPrice = 0;
+      console.log(items);
       const promises = items.map(async (item) => {
-        const response = await fetch(`http://localhost:4000/users/books/${item.bookId}`);
+        const response = await fetch(`http://localhost:4000/users/books/${item.bookid}`);
         const bookData = await response.json();
         totalPrice += bookData.discountedprice * item.quantity;
       });
@@ -53,9 +55,14 @@ const Cart = () => {
   };
 
   const removeFromCart = async (bookId) => {
+    const token = localStorage.getItem('token');
     try {
+      console.log(bookId)
       const response = await fetch(`http://localhost:4000/users/removeFromCart/${bookId}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }  
       });
       if (response.ok) {
         console.log(`Book ID ${bookId} removed from cart`);
@@ -71,17 +78,36 @@ const Cart = () => {
   return (
     <div>
       <h1>Shopping Cart</h1>
+      <table className="table-fill">
+        <thead>
+          <tr>
+            <th colSpan="2">Product</th>
+            <th>#</th>
+            <th>Price</th>
+            <th>Amount</th>
+            <th>Item Removal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cartItems.map((item) => (
+            <tr key={item.bookId}>
+              <td><img src={item.image} alt={item.title} /></td>
+              <td>{item.title}</td>
+              <td>{item.quantity}</td>
+              <td>${item.discountedprice}</td>
+              <td>${item.quantity * item.discountedprice}</td>
+              <td><button onClick={() => removeFromCart(item.bookId)}>Remove</button></td>
+            </tr>
+          ))}
+          <tr className="totals">
+            <td colSpan="4">Subtotal</td>
+            <td>${totalPrice}</td>
+            <td></td>
+          </tr>
+          {/* Add more total rows here if needed */}
+        </tbody>
+      </table>
       <div>
-        {cartItems.map((item) => (
-          <div key={item.bookId}>
-            <p>Book ID: {item.bookId}</p>
-            <p>Quantity: {item.quantity}</p>
-            <button onClick={() => removeFromCart(item.bookId)}>Remove</button>
-          </div>
-        ))}
-      </div>
-      <div>
-        <h3>Total Price: ${totalPrice}</h3>
         <button onClick={() => navigate('/checkout')}>Proceed to Checkout</button>
       </div>
     </div>

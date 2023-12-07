@@ -205,13 +205,17 @@ router.post('/addcart', async (req, res) => {
 
 // 获取购物车项目
 router.get('/cartItems', async (req, res) => {
-  const token = req.headers.authorization; // 从请求头中获取 token
+  const token = req.headers.authorization; // 注意这里是小写的 'authorization'，而不是 'Authorization'
   
   try {
-    const decodedToken = jwt.verify(token, '123456'); // 解码和验证 token
-    console.log(decodedToken);
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' }); // 添加未授权情况的处理
+    }
+
+    const decodedToken = jwt.verify(token.split(' ')[1], '123456'); // 解码和验证 token
+    //console.log(decodedToken);
     const userid = decodedToken.userid; // 从解码后的 token 中获取用户 ID
-    
+    //console.log(userid);
     const query = `
       SELECT cart.id, cart.book_id AS bookId, cart.quantity, books.title, books.image, books.originalprice, books.discountedprice
       FROM cart
@@ -221,6 +225,7 @@ router.get('/cartItems', async (req, res) => {
     const { rows } = await pool.query(query, [userid]);
     res.status(200).json({ cartItems: rows });
   } catch (error) {
+    console.error(error); // 打印错误信息以便调试
     res.status(500).json({ error: 'Error fetching cart items' });
   }
 });
@@ -236,6 +241,33 @@ router.get('/books/:bookId', async (req, res) => {
     res.status(200).json(rows[0]);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching book information' });
+  }
+});
+
+router.delete('/removeFromCart/:bookId', async (req, res) => {
+  const bookId = req.params.bookId; // Get the bookId from the URL params
+  const token = req.headers.authorization.split(' ')[1]; // Get the token from the request headers
+  const decodedToken = jwt.verify(token, '123456'); // Verify and decode the token
+  const userId = decodedToken.userid; // Get the user ID from the decoded token
+
+  try {
+    // Perform the removal of the book from the user's cart based on bookId and userId
+    // For example, delete the book entry from the cart table where user_id matches userId and book_id matches bookId
+    // Replace this query with your own logic based on your database schema
+    const deleteQuery = `
+      DELETE FROM cart
+      WHERE user_id = $1 AND book_id = $2
+    `;
+    const { rowCount } = await pool.query(deleteQuery, [userId, bookId]);
+
+    if (rowCount > 0) {
+      res.status(200).json({ message: `Book ID ${bookId} removed from cart` });
+    } else {
+      res.status(404).json({ error: `Book ID ${bookId} not found in the cart` });
+    }
+  } catch (error) {
+    console.error('Error removing book from cart:', error);
+    res.status(500).json({ error: 'Error removing book from cart' });
   }
 });
 
