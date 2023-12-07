@@ -20,6 +20,13 @@ router.post('/register', async (req, res) => {
   const { userid, password, email, country, province, city } = req.body;
 
   try {
+    const checkQuery = 'SELECT * FROM users WHERE userid = $1';
+    //console.log(checkQuery);
+    const checkResult = await pool.query(checkQuery, [userid]);
+    if (checkResult.rows.length > 0) {
+      res.status(409).json({ error: '用户ID已存在！' });
+    }else {
+
     // 将用户信息插入到数据库中的 users 表中
     const insertQuery = `
       INSERT INTO users (userid, password, email, country, province, city)
@@ -29,7 +36,8 @@ router.post('/register', async (req, res) => {
     await pool.query(insertQuery, values);
 
     res.status(200).json({ message: '用户注册成功！' });
-  } catch (error) {
+  } }
+  catch (error) {
     res.status(500).json({ error: '注册失败，请重试！' });
   }
 });
@@ -44,10 +52,15 @@ router.post('/login', async (req, res) => {
     const { rows } = await pool.query(query, [userid, password]);
 
     if (rows.length === 1) {
-    
+      const user = rows[0];
+      if (user.identity === 'deactivate') {
+        res.status(405).json({ error: '用户已停用，请联系管理员！' });
+      }else {
+
       const token = jwt.sign({ userid }, secretKey); // 更换成您自己的密钥
 
       res.status(200).json({ message: '用户登录成功！' ,token});
+      }
     } else {
       res.status(401).json({ error: '用户名或密码错误！' });
     }

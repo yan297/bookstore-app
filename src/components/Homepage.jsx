@@ -24,6 +24,8 @@ const Home = () => {
             <li><Link to="/join#toregister">注册</Link></li>
             <li><Link to="/cart">购物车</Link></li>
             <li><Link to="/member" style={{ border: 'none' }}>个人中心</Link></li>
+            <li><Link to="/admin">管理</Link></li>
+
           </ul>
         </div>
       </div>

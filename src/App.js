@@ -9,6 +9,7 @@ import BooksList from './components/Booklist.jsx'; // 引入书籍列表组件
 import BookDetail from './components/BookDetail.jsx';
 import Member from './components/Member.jsx';
 import Cart from './components/Cart.jsx';
+import Admin from './components/Admin.jsx';
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
         <Route path="/detail/:title/:id" element={<BookDetail />} />
         <Route path="/member" element={<Member />} />
         <Route path="/cart" element={<Cart />}/>
-
+        <Route path="/admin" element={<Admin />}/>
       </Routes>
     </Router>
   );
