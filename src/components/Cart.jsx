@@ -94,7 +94,7 @@ const Cart = () => {
               <td><img src={item.image} alt={item.title} /></td>
               <td>{item.title}</td>
               <td>{item.quantity}</td>
-              <td>${item.discountedprice}</td>
+              <td>${item.discountedprice}</td>  
               <td>${item.quantity * item.discountedprice}</td>
               <td><button onClick={() => removeFromCart(item.bookId)}>Remove</button></td>
             </tr>
@@ -102,9 +102,8 @@ const Cart = () => {
           <tr className="totals">
             <td colSpan="4">Subtotal</td>
             <td>${totalPrice}</td>
-            <td></td>
+            <td><button >结账</button></td>
           </tr>
-          {/* Add more total rows here if needed */}
         </tbody>
       </table>
       <div>

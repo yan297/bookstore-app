@@ -284,4 +284,119 @@ router.delete('/removeFromCart/:bookId', async (req, res) => {
   }
 });
 
+// GET 请求，获取用户列表
+router.get('/getuserlist', async (req, res) => {
+  try {
+    // 从数据库中获取用户列表数据
+    const query = 'SELECT userid, email, identity FROM users'; // 根据你的数据库表结构定义查询语句
+    const { rows } = await pool.query(query);
+    //console.log(rows);
+    // 将查询到的用户列表数据发送给前端
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error('Error fetching user list:', error);
+    res.status(500).json({ error: '获取用户列表失败！' });
+  }
+});
+
+router.post('/updateUserIdentify/:userId', async (req, res) => {
+  const { userId } = req.params;
+  //console.log(req.params);
+  try {
+    // 查询当前用户的身份标识
+    const query = 'SELECT identity FROM users WHERE userid = $1';
+    const { rows } = await pool.query(query, [userId]);
+
+    if (rows.length === 1) {
+      const currentIdentity = rows[0].identity;
+
+      // 根据当前的身份标识进行更新
+      let newIdentity = '';
+      if (currentIdentity === 'admin') {
+        newIdentity = 'activated';
+      } else {
+        newIdentity = 'admin';
+      }
+
+      // 执行更新操作
+      const updateQuery = 'UPDATE users SET identity = $1 WHERE userid = $2';
+      await pool.query(updateQuery, [newIdentity, userId]);
+
+      res.status(200).json({ message: '用户身份更新成功！' });
+    } else {
+      res.status(404).json({ error: '用户不存在！' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: '更新用户身份失败！' });
+  }
+});
+
+router.post('/activateUser/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // 根据用户ID从数据库中查询对应用户的身份信息
+    const query = 'SELECT identity FROM users WHERE userid = $1';
+    const { rows } = await pool.query(query, [userId]);
+
+    if (rows.length === 1) {
+      const currentIdentity = rows[0].identity;
+
+      // 切换用户身份状态
+      let newIdentity = '';
+      if (currentIdentity === 'activated') {
+        newIdentity = 'deactivated';
+      } else if (currentIdentity === 'deactivated') {
+        newIdentity = 'activated';
+      } else {
+        // 可能需要适当处理未知的身份状态
+        return res.status(400).json({ error: 'Can not deactivate admin!' });
+      }
+
+      // 更新用户身份状态到数据库中
+      const updateQuery = 'UPDATE users SET identity = $1 WHERE userid = $2';
+      await pool.query(updateQuery, [newIdentity, userId]);
+
+      res.status(200).json({ message: 'User identity updated successfully!' });
+    } else {
+      res.status(404).json({ error: 'User not found!' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error toggling user identity!' });
+  }
+});
+
+// 删除用户路由
+router.delete('/deleteUser/:userId', async (req, res) => {
+  const userId = req.params.userId; // 获取前端传递的用户ID
+
+  try {
+    // 查询用户的身份信息
+    const userQuery = 'SELECT identity FROM users WHERE userid = $1';
+    const { rows } = await pool.query(userQuery, [userId]);
+
+    if (rows.length === 1) {
+      const userIdentity = rows[0].identity;
+
+      // 检查用户的身份是否是 admin，如果是 admin 则拒绝删除请求
+      if (userIdentity === 'admin') {
+        return res.status(403).json({ error: '无法删除管理员账户！' });
+      }
+
+      // 如果不是 admin，执行删除用户的操作
+      const deleteQuery = 'DELETE FROM users WHERE userid = $1';
+      await pool.query(deleteQuery, [userId]);
+
+      // 删除成功后，向前端发送成功消息
+      res.status(200).json({ message: `用户 ${userId} 已成功删除！` });
+    } else {
+      res.status(404).json({ error: '用户不存在！' });
+    }
+  } catch (error) {
+    // 处理删除失败的情况
+    res.status(500).json({ error: '删除用户失败！' });
+  }
+});
+
+
 module.exports = router;
