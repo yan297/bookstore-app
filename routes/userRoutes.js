@@ -38,10 +38,10 @@ router.post('/register', async (req, res) => {
     const values = [userid, hashedPassword, email, country, province, city];
     await pool.query(insertQuery, values);
 
-    res.status(200).json({ message: '用户注册成功！' });
+    res.status(200).json({ message: 'User registration successful!' });
   } }
   catch (error) {
-    res.status(500).json({ error: '注册失败，请重试！' });
+    res.status(500).json({ error: 'Registration failed, please try again!' });
   }
 });
 
@@ -57,18 +57,18 @@ router.post('/login', async (req, res) => {
     if (rows.length === 1) {
       const user = rows[0];
       if (user.identity === 'deactivate') {
-        res.status(405).json({ error: '用户已停用，请联系管理员！' });
+        res.status(405).json({ error: 'The user has been deactivated, please contact the administrator!' });
       }else {
 
       const token = jwt.sign({ userid }, secretKey); // 更换成您自己的密钥
 
-      res.status(200).json({ message: '用户登录成功！' ,token});
+      res.status(200).json({ message: 'User login successful!' ,token});
       }
     } else {
-      res.status(401).json({ error: '用户名或密码错误！' });
+      res.status(401).json({ error: 'wrong user name or password!' });
     }
   } catch (error) {
-    res.status(500).json({ error: '登录失败，请重试！' });
+    res.status(500).json({ error: 'Login failed, please try again!' });
   }
 });
 
