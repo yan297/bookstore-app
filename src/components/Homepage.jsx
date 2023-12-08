@@ -146,18 +146,18 @@ const Home = () => {
     <div class="help fr">
 			<h2>Public Booklist</h2>
 			<ul>
-				<li><a href="notice-detail.html">Booklist1</a></li>
-				<li><a href="notice-detail.html">Booklist2</a></li>
-				<li><a href="notice-detail.html">Booklist3</a></li>
-				<li><a href="notice-detail.html">Booklist4</a></li>
-				<li><a href="notice-detail.html">Booklist5</a></li>
+				<li><a href="#">Booklist1</a></li>
+				<li><a href="#">Booklist2</a></li>
+				<li><a href="#">Booklist3</a></li>
+				<li><a href="#">Booklist4</a></li>
+				<li><a href="#">Booklist5</a></li>
 			</ul>
 			<h2>Your Privite Booklist</h2>
 			<ul>
-				<li><a href="help.html">Userbooklist1</a></li>
-				<li><a href="help.html">Userbooklist2</a></li>
-				<li><a href="help.html">Userbooklist3</a></li>
-				<li><a href="help.html">Userbooklist4</a></li>
+				<li><a href="#">Userbooklist1</a></li>
+				<li><a href="#">Userbooklist2</a></li>
+				<li><a href="#">Userbooklist3</a></li>
+				<li><a href="#">Userbooklist4</a></li>
 			</ul>
     </div>
     </div>
