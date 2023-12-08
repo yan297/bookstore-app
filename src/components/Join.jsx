@@ -64,6 +64,7 @@ const Join = () => {
       const data = await response.json();
       //console.log(response);
       console.log(data); // 打印服务器响应的数据到控制台
+      alert(data.message);
       //console.log(data.token);
         // 这里可以根据服务器响应的数据执行其他操作
         // 存储 token 到 localStorage 中
@@ -74,10 +75,10 @@ const Join = () => {
       navigate('/');
 
       } else {
-        console.error('登录失败');
+        console.error('Login failed');
       }
     } catch (error) {
-      console.error('请求错误:', error);
+      console.error('Request error:', error);
     }    
     console.log('Login Submit:', loginData);
     // 调用登录接口
@@ -97,12 +98,14 @@ const Join = () => {
         .then((data) => {
           // 处理从服务器返回的响应
           console.log(data);
+          alert(data.message);
         })
         .catch((error) => {
           // 处理错误
           console.error('Error:', error);
         });  
     console.log('Register Submit:', registerData);
+    navigate('/');
     // 调用注册接口
   };
 

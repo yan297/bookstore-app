@@ -30,16 +30,20 @@ const Checkout = () => {
       console.error('Error fetching book details:', error);
     }
   };
-
+    const totalDiscountedPrice = bookDetails.reduce(
+      (total, book) => total + parseFloat(book.discountedprice),
+      0
+    );
+  
   return (
 <div class="checkout-container">
-    <h1 class="checkout-title">结账</h1>
-    <h2 class="summary-title">摘要</h2>
+    <h1 class="checkout-title">Payment</h1>
+    <h2 class="summary-title">Summary</h2>
     <table class="book-summary-table">
       <thead>
         <tr>
-          <th>书名</th>
-          <th>价格</th>
+          <th>Title</th>
+          <th>Price</th>
         </tr>
       </thead>
       <tbody>
@@ -50,20 +54,20 @@ const Checkout = () => {
             </tr>
           ))}
           <tr>
-          <td><strong>总计</strong></td>
-          <td><strong>$45</strong></td>
+          <td><strong>Total</strong></td>
+          <td><strong>${totalDiscountedPrice.toFixed(2)}</strong></td>
         </tr>
         </tbody>
       </table>
-      <h2 class="payment-info-title">支付信息</h2>
+      <h2 class="payment-info-title">Payment Info</h2>
     <form class="payment-form">
-      <label>卡号：</label>
-      <input type="text" placeholder="输入卡号" />
-      <label>有效期：</label>
-      <input type="text" placeholder="输入有效期" />
+      <label>Card #：</label>
+      <input type="text" required="required" placeholder="Enter card number" />
+      <label>Exp Date</label>
+      <input type="text" required="required" placeholder="Enter expiration date" />
       <label>CVV：</label>
-      <input type="text" placeholder="输入CVV" />
-      <button>立即支付</button>
+      <input type="text" required="required" placeholder="Enter CVV" />
+      <button>Pay Now</button>
     </form>
   </div>
   );

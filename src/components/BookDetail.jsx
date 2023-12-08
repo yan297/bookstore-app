@@ -52,15 +52,19 @@ const BookDetail = ({ location }) => {
       });
 
       if (response.ok) {
-        console.log('成功加入购物车');
+        console.log('Successfully added to shopping cart');
+        alert('Successfully added to shopping cart')
         // 这里你可以添加一些逻辑来显示成功添加到购物车的信息或者跳转到购物车页面
         //navigate('/cart'); // 使用 navigate 进行页面跳转
 
       } else {
-        console.error('添加购物车失败');
+        console.error('Add to Cart failed');
+        alert('Add to Cart failed')
       }
     } catch (error) {
-      console.error('请求错误:', error);
+      console.error('Request error:', error);
+      alert('Request error:')
+
     }
   };
 

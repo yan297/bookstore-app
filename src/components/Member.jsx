@@ -60,6 +60,9 @@ const Member = () => {
       .then((data) => {
         setMessage(data.message); // store the message from the backend
         console.log('Updated User Data:', data);
+        if(data.error){
+          alert(data.error);}
+          else{alert(data.message);}
         // 更新成功后的操作...
       })
       .catch((error) => {
@@ -82,6 +85,10 @@ const Member = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log('Password updated successfully:', data);
+        if(data.error){
+          alert(data.error);}
+          else{alert(data.message);}
+
       })
       .catch((error) => {
         console.error('Error updating password:', error);
@@ -114,15 +121,15 @@ const Member = () => {
 
   return (
 <div className="user-info-container">
-        <div className="section-title">个人信息</div>
+        <div className="section-title">Personal Information</div>
       <div className="user-info-main">
         <form onSubmit={handleFormSubmit}>
           <p>
-            <span className="nice">用户名：</span>
+            <span className="nice">Userid：</span>
             <span>{userData.userid}</span>
           </p>
           <p>
-            <span className="nice">邮箱：</span>
+            <span className="nice">Email：</span>
             <input
               type="text"
               name="email"
@@ -131,7 +138,7 @@ const Member = () => {
             />
           </p>
           <p>
-            <span className="nice">国家：</span>
+            <span className="nice">Country：</span>
             <input
               type="text"
               name="country"
@@ -140,7 +147,7 @@ const Member = () => {
             />
           </p>
           <p>
-            <span className="nice">省份：</span>
+            <span className="nice">Province：</span>
             <input
               type="text"
               name="province"
@@ -149,7 +156,7 @@ const Member = () => {
             />
           </p>
           <p>
-            <span className="nice">城市：</span>
+            <span className="nice">City：</span>
             <input
               type="text"
               name="city"
@@ -157,14 +164,14 @@ const Member = () => {
               onChange={handleInputChange}
             />
           </p>
-          <input className="user-info-submit" type="submit" value="修改信息" />
+          <input className="user-info-submit" type="submit" value="Modify" />
         </form>
       </div>
-      <div className="user-info-main">修改密码
+      <div className="user-info-main">Change Password
 
       <form onSubmit={handlePasswordSubmit}>
       <p>
-            <span className="nice">原密码：</span>
+            <span className="nice">Old Password：</span>
             <input
               type="text"
               name="oldPassword"
@@ -173,7 +180,7 @@ const Member = () => {
             />
           </p>
           <p>
-            <span className="nice">新密码：</span>
+            <span className="nice">New Password：</span>
             <input
               type="text"
               name="newPassword"
@@ -182,7 +189,7 @@ const Member = () => {
             />
           </p>
           <p>
-            <span className="nice">确认密码：</span>
+            <span className="nice">Confirm Password：</span>
             <input
               type="text"
               name="confirmPassword"
@@ -190,7 +197,7 @@ const Member = () => {
               onChange={handlePasswordInputChange}
             />
           </p>
-          <input className="user-info-submit" type="submit" value="修改密码" />
+          <input className="user-info-submit" type="submit" value="Change Password" />
       </form>
       {renderMessage()} {/* Render the message */}
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './css/animate-custom.css'
 import './css/index.css'
+import { useNavigate } from 'react-router-dom';
 
 const PublishBook = () => {
   const [bookData, setBookData] = useState({
@@ -11,6 +12,7 @@ const PublishBook = () => {
     originalPrice: 0,
     discountedPrice: 0,
   });
+  const navigate = useNavigate(); // 获取用于导航的 navigate 函数
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +28,7 @@ const PublishBook = () => {
       bookData.quantity === 0 ||  // 检查 quantity 不为零
       bookData.originalPrice === 0  // 检查 originalPrice 不为零
     ) {
-      alert('请填写所有必填项，并确保数量和价格不为零');
+      alert('Please fill in all required fields and make sure quantity and price are not zero');
       return;
     }
 
@@ -60,12 +62,16 @@ const PublishBook = () => {
       .then((data) => {
         // 处理从服务器返回的响应
         console.log(data);
+        if(data.error){
+          alert(data.error);}
+          else{alert(data.message);}
       })
       .catch((error) => {
         // 处理错误
         console.error('Error:', error);
       });
     console.log('Publish Submit:', updatedBookData);
+    navigate('/');
     // 调用图书发布接口
   };
 

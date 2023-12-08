@@ -3,43 +3,69 @@ import { Link, useLocation } from 'react-router-dom';
 import './css/index.css';
 import './css/swiper3.07.min.css';
 import logo4 from './images/logo4.png'; 
-import handleSearch from './Homepage.jsx';
+//import handleSearch from './Homepage.jsx';
+import { useNavigate } from 'react-router-dom';
+
 
 const BooksList = () => {
   const [books, setBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('title'); // Declare searchType state
   const location = useLocation();
+  const history = useNavigate(); // 获取路由历史对象
 
-  useEffect(() => {
-    fetch('http://localhost:4000/users/books')
-      .then(response => response.json())
-      .then(data => setBooks(data))
-      .catch(error => console.error('Error fetching books:', error));
-  }, []);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchType === 'title') {
+      history(`/list?search=${encodeURIComponent(searchTerm)}`);
+    } else if (searchType === 'author') {
+      history(`/list?searchBy=author&search=${encodeURIComponent(searchTerm)}`);
+    }  };
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const searchBy = searchParams.get('searchBy'); // 获取搜索类型
-    const search = searchParams.get('search');
-    setSearchTerm(search || '');
-    setSearchType(searchBy || 'title'); // 设置搜索类型，默认为标题
-
-    // 更新根据不同搜索类型过滤书籍的逻辑
-    if (searchType === 'author') {
-      // 发送根据作者字段搜索的请求
-      fetch(`http://localhost:4000/users/books?author=${encodeURIComponent(search)}`)
-        .then(response => response.json())
-        .then(data => setBooks(data))
-        .catch(error => console.error('Error fetching books by author:', error));
-    } else {
-      // 默认按照标题搜索的请求逻辑
-      fetch('http://localhost:4000/users/books')
-        .then(response => response.json())
-        .then(data => setBooks(data))
-        .catch(error => console.error('Error fetching books:', error));
-    }
-  }, [location.search]);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch('http://localhost:4000/users/books');
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          setBooks(data);
+        } catch (error) {
+          console.error('Error fetching books:', error);
+        }
+      };
+  
+      fetchData();
+    }, []);
+  
+    useEffect(() => {
+      const searchParams = new URLSearchParams(location.search);
+      const searchBy = searchParams.get('searchBy');
+      const search = searchParams.get('search');
+      setSearchTerm(search || '');
+      setSearchType(searchBy || 'title');
+      
+      const fetchData = async () => {
+        try {
+          let searchUrl = 'http://localhost:4000/users/books';
+          if (searchType === 'author') {
+            searchUrl = `http://localhost:4000/users/books?author=${encodeURIComponent(search)}`;
+          }
+          const response = await fetch(searchUrl);
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          setBooks(data);
+        } catch (error) {
+          console.error('Error fetching books:', error);
+        }
+      };
+  
+      fetchData();
+    }, [location.search, searchType]);
+  
 
 
   // 过滤显示符合搜索词的书籍
@@ -78,7 +104,9 @@ const BooksList = () => {
           onClick={() => setSearchType('author')} // 更新搜索类型为作者
             />
           </form>
-            <p>Popular Searches：<Link to="/list?search=Oliver">Oliver</Link> <Link to="/list?search=Prince">Prince</Link> </p>
+            <p>Popular Searches：<Link to="/list?search=Oliver">Oliver</Link> <Link to="/list?search=Prince">Prince</Link> 
+            <Link to="/list?searchBy=author&search=Charles">Charles</Link> <Link to="/list?searchBy=author&search=Antoine">Antoine</Link>
+            </p>
           </div>
           <div className="mm fr clearfix">
           <Link to="/list">Buy</Link>

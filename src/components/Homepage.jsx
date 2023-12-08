@@ -2,8 +2,8 @@ import React, { useState, useEffect  } from 'react';
 import './css/index.css'; // 导入相关的 CSS 文件
 import './css/swiper3.07.min.css'
 import { Link} from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import logo4 from './images/logo4.png'; 
+//import { useNavigate } from 'react-router-dom';
+//import logo4 from './images/logo4.png'; 
 import notice from './images/notice.png';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -45,17 +45,11 @@ const Home = () => {
     ],
   }
 
-  const [searchTerm, setSearchTerm] = useState(''); // 用于存储用户输入的搜索词
-  const history = useNavigate(); // 获取路由历史对象
-  const [searchType, setSearchType] = useState('title'); // 新增搜索类型状态
+  //const [searchTerm, setSearchTerm] = useState(''); // 用于存储用户输入的搜索词
+  //const history = useNavigate(); // 获取路由历史对象
+  //const [searchType, setSearchType] = useState('title'); // 新增搜索类型状态
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchType === 'title') {
-      history(`/list?search=${encodeURIComponent(searchTerm)}`);
-    } else if (searchType === 'author') {
-      history(`/list?searchBy=author&search=${encodeURIComponent(searchTerm)}`);
-    }  };
+  
 
 // 例如，获取成功励志类别的书籍信息
   const [books, setBooks] = useState([]); // State to store fetched books
@@ -169,7 +163,7 @@ const Home = () => {
     </div>
     
       {/* 传递搜索词给 BooksList 组件 */}
-      <BooksList searchTerm={searchTerm} />
+      <BooksList />
       
 
       <div class="item clearfix" id="item1">

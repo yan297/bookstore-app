@@ -88,7 +88,7 @@ router.get('/books', async (req, res) => {
 
     res.status(200).json(rows);
   } catch (error) {
-    res.status(500).json({ error: '获取书籍列表失败！' });
+    res.status(500).json({ error: 'Failed to get book list!' });
   }
 });
 // 添加书籍的路由处理程序
@@ -104,9 +104,9 @@ router.post('/books/add', async (req, res) => {
     const values = [title, image, quantity, originalPrice, discountedPrice, author];
     await pool.query(insertQuery, values);
 
-    res.status(200).json({ message: '书籍添加成功！' });
+    res.status(200).json({ message: 'Book added successfully!' });
   } catch (error) {
-    res.status(500).json({ error: '添加书籍失败，请重试！' });
+    res.status(500).json({ error: 'Failed to add books, please try again!' });
   }
 });
 
@@ -117,7 +117,7 @@ router.get('/userInfo', async (req, res) => {
     // 在这里进行对 token 的验证和解码
     // 从 token 中提取用户信息或用户 ID
     if (!token) {
-      return res.status(401).json({ error: '没有提供 Token！' });
+      return res.status(401).json({ error: 'Please log in first！' });
     }
     try {
       const decoded = jwt.verify(token.replace('Bearer ', ''), secretKey);
@@ -132,10 +132,10 @@ router.get('/userInfo', async (req, res) => {
       const userData = rows[0];
       res.status(200).json(userData);
     } else {
-      res.status(404).json({ error: '未找到用户信息！' });
+      res.status(404).json({ error: 'User information not found!' });
     }
   } catch (error) {
-    res.status(500).json({ error: '获取用户信息失败！' });
+    res.status(500).json({ error: 'Failed to obtain user information!' });
   }
 
 });
@@ -151,10 +151,10 @@ router.put('/updateUserInfo', async (req, res) => {
     await pool.query(updateQuery, values);
 
     // 更新成功，向前端发送成功消息
-    res.status(200).json({ message: '用户信息更新成功！' });
+    res.status(200).json({ message: 'User information updated successfully!' });
   } catch (error) {
     // 处理更新失败的情况
-    res.status(500).json({ error: '更新用户信息失败！' });
+    res.status(500).json({ error: 'Failed to update user information!' });
   }
 });
 
@@ -172,13 +172,13 @@ router.put('/updatePassword', async (req, res) => {
       //console.log(savedPassword);
       // 检查旧密码是否匹配数据库中存储的密码
       if (password !== savedPassword) {
-        return res.status(400).json({ error: '旧密码不正确！' });
+        return res.status(400).json({ error: 'The old password is incorrect!' });
       }
       //console.log(newPassword);
       //console.log(userid);
       // 检查新密码和确认密码是否匹配
       if (newPassword !== confirmPassword) {
-        return res.status(400).json({ error: '新密码和确认密码不匹配！' });
+        return res.status(400).json({ error: 'New password and confirmation password do not match!' });
       }
       
       // 更新数据库中的密码为新密码
@@ -186,12 +186,12 @@ router.put('/updatePassword', async (req, res) => {
 
       await pool.query(updateQuery, [newPassword, userid]);
 
-      res.status(200).json({ message: '密码更新成功！' });
+      res.status(200).json({ message: 'Password updated successfully!' });
     } else {
-      res.status(404).json({ error: '用户不存在！' });
+      res.status(404).json({ error: 'User does not exist!' });
     }
   } catch (error) {
-    res.status(500).json({ error: '更新密码失败！' });
+    res.status(500).json({ error: 'Failed to update password!' });
   }
 });
 
@@ -299,7 +299,7 @@ router.delete('/removeFromCart/:bookId', async (req, res) => {
 router.get('/getuserlist', async (req, res) => {
   const token = req.headers.authorization;
   if (!token) {
-    return res.status(401).json({ error: '没有提供 Token！' });
+    return res.status(401).json({ error: 'Please log in to the administrator account first! ' });
   }
   try {
     const decoded = jwt.verify(token.replace('Bearer ', ''), secretKey);
@@ -313,10 +313,10 @@ if (userid === '123456') {
     // 将查询到的用户列表数据发送给前端
     res.status(200).json(rows);}
     else{
-      res.status(403).json({ error: '您没有权限访问管理员页面！' });}
+      res.status(403).json({ error: 'You do not have permission to access the admin page!' });}
   } catch (error) {
     console.error('Error fetching user list:', error);
-    res.status(500).json({ error: '获取用户列表失败！' });
+    res.status(500).json({ error: 'Failed to get user list!' });
   }
 });
 
@@ -343,12 +343,12 @@ router.post('/updateUserIdentify/:userId', async (req, res) => {
       const updateQuery = 'UPDATE users SET identity = $1 WHERE userid = $2';
       await pool.query(updateQuery, [newIdentity, userId]);
 
-      res.status(200).json({ message: '用户身份更新成功！' });
+      res.status(200).json({ message: 'User identity updated successfully!' });
     } else {
-      res.status(404).json({ error: '用户不存在！' });
+      res.status(404).json({ error: 'User does not exist!' });
     }
   } catch (error) {
-    res.status(500).json({ error: '更新用户身份失败！' });
+    res.status(500).json({ error: 'Failed to update user identity!' });
   }
 });
 
@@ -401,7 +401,7 @@ router.delete('/deleteUser/:userId', async (req, res) => {
 
       // 检查用户的身份是否是 admin，如果是 admin 则拒绝删除请求
       if (userIdentity === 'admin') {
-        return res.status(403).json({ error: '无法删除管理员账户！' });
+        return res.status(403).json({ error: 'Unable to delete administrator account!' });
       }
 
       // 如果不是 admin，执行删除用户的操作
@@ -409,13 +409,13 @@ router.delete('/deleteUser/:userId', async (req, res) => {
       await pool.query(deleteQuery, [userId]);
 
       // 删除成功后，向前端发送成功消息
-      res.status(200).json({ message: `用户 ${userId} 已成功删除！` });
+      res.status(200).json({ message: `User ${userId} Deleted successfully!` });
     } else {
-      res.status(404).json({ error: '用户不存在！' });
+      res.status(404).json({ error: 'User does not exist!' });
     }
   } catch (error) {
     // 处理删除失败的情况
-    res.status(500).json({ error: '删除用户失败！' });
+    res.status(500).json({ error: 'Failed to delete user!' });
   }
 });
 

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Admin = () => {
   const [userList, setUserList] = useState([]);
+  const history = useNavigate();
+
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('token'); // 从 localStorage 中获取 token
@@ -12,9 +15,14 @@ const Admin = () => {
         },
       });
   
-
-      const data = await response.json();
-      setUserList(data);
+      if (response.status === 200) {
+        const data = await response.json();
+        setUserList(data);
+      } else if (response.status === 403) {
+        // 如果没有权限访问管理员页面，返回到主页面并显示错误消息
+        history('/');
+        alert('You do not have permission to access the admin page!');
+      }
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -22,14 +30,15 @@ const Admin = () => {
   useEffect(() => {
     
     fetchData();
-  }, []);
+  }, [history]);
 
   const handleAuthorization = (userId, userRole) => {
     // 根据您的实际需求编写授权逻辑
     console.log(`Authorizing user ${userId} with role ${userRole}`);
     // 执行授权操作
     if (userId === '123456') {
-      console.log('不可修改原始账户！');
+      console.log('The original account cannot be modified!');
+      alert('The original account cannot be modified!');
       return; // 如果是原始账户，停止执行后续操作
     }
   
@@ -46,6 +55,9 @@ const Admin = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data); // 处理服务器返回的数据
+        if(data.error){
+          alert(data.error);}
+          else{alert(data.message);}
         fetchData(); // 调用刷新列表的函数
       })
       .catch((error) => {
@@ -69,6 +81,9 @@ const Admin = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data); // 处理服务器返回的数据
+        if(data.error){
+        alert(data.error);}
+        else{alert(data.message);}
         fetchData(); // 调用刷新列表的函数
       })
       .catch((error) => {
@@ -91,6 +106,9 @@ const Admin = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data); // 处理服务器返回的数据
+        if(data.error){
+        alert(data.error);}
+        else{alert(data.message);}
         fetchData(); // 调用刷新列表的函数
       })
       .catch((error) => {
@@ -105,10 +123,10 @@ const Admin = () => {
       <table className="layui-table"  id="userTable">
         <thead>
           <tr>
-            <th lay-data="{field:'userId', width:150}">用户id</th>
-            <th lay-data="{field:'nickName', width:150}">用户邮箱</th>
-            <th lay-data="{field:'userStatus', width:100}">用户状态</th>
-            <th lay-data="{toolbar: '#optionBar', width:200}">操作</th>
+            <th lay-data="{field:'userId', width:150}">Userid</th>
+            <th lay-data="{field:'nickName', width:150}">Useremail</th>
+            <th lay-data="{field:'userStatus', width:100}">Userstatus</th>
+            <th lay-data="{toolbar: '#optionBar', width:200}">Operate</th>
           </tr>
         </thead>
         <tbody>
@@ -119,13 +137,13 @@ const Admin = () => {
               <td>{user.identity}</td>
               <td>
                 <button className="layui-btn layui-btn-success layui-btn-xs" onClick={() => handleAuthorization(user.userid, user.identity)}>
-                  管理授权
+                Authorization
                 </button>
                 <button className="layui-btn layui-btn-danger layui-btn-xs" onClick={() => handleActivation(user.userid, user.identity)}>
-                  停用/激活
+                De/Activate
                 </button>
                 <button className="layui-btn layui-btn-normal layui-btn-xs" onClick={() => handleDelete(user.userid, user.identity)}>
-                  删除
+                  Delete
                 </button>
               </td>
             </tr>
