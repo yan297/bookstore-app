@@ -8,7 +8,7 @@ import BookDetail from './components/BookDetail.jsx';
 import Member from './components/Member.jsx';
 import Cart from './components/Cart.jsx';
 import Admin from './components/Admin.jsx';
-import Checkout from './components/Checkout .jsx';
+import Checkout from './components/Checkout.jsx';
 
 function App() {
   return (
