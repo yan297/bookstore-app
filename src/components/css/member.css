@@ -1,0 +1,60 @@
+.user-info-container {
+	width: 100%;
+	max-width: 600px; /* 调整宽度 */
+	margin: 40px auto; /* 居中并提供上下空间 */
+	padding: 20px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	background: #ffffff;
+	border-radius: 8px;
+  }
+  
+  .section-title {
+	font-size: 24px;
+	color: #333333;
+	text-align: center;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 20px;
+  }
+  
+  .user-info-main {
+	padding: 0 15px 20px;
+  }
+  
+  .user-info-main form p {
+	margin: 10px 0;
+	display: flex;
+	align-items: center;
+  }
+  
+  .user-info-main input[type="text"],
+  .user-info-main input[type="submit"] {
+	border: 1px solid #ddd;
+	padding: 10px;
+	margin-right: 10px; /* 减小右边距 */
+	flex-grow: 1; /* 输入框填满剩余空间 */
+  }
+  
+  .user-info-submit {
+	background-color: #46B448;
+	color: white;
+	padding: 10px 30px;
+	border: none;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+	cursor: pointer;
+	transition: background-color 0.3s;
+	margin: 20px auto 0; /* 居中显示 */
+	display: block; /* 独占一行 */
+  }
+  
+  .user-info-main span.nice {
+	min-width: 100px;
+	text-align: right;
+	margin-right: 10px; /* 增加右边距 */
+  }
+  
+  /* 增加交互效果 */
+  .user-info-submit:hover {
+	background-color: #3da63c;
+  }

@@ -6,6 +6,8 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const navigate = useNavigate();
+  const [bookIds, setbookIds] = useState('');
+
 
   useEffect(() => {
     fetchCartItems();
@@ -28,6 +30,9 @@ const Cart = () => {
   
       const data = await response.json();
       setCartItems(data.cartItems);
+      //console.log(data.cartItems);
+      const bookIds = data.cartItems.map(item => item.bookid);
+      setbookIds(bookIds); // 设置用户ID
 
       // 一次性获取书籍信息并计算总价
       calculateTotalPrice(data.cartItems);
@@ -102,13 +107,12 @@ const Cart = () => {
           <tr className="totals">
             <td colSpan="4">Subtotal</td>
             <td>${totalPrice}</td>
-            <td><button >结账</button></td>
+            <td><button onClick={() => navigate(`/checkout/${bookIds.join(',')}`)}>Proceed to Checkout</button></td>
+
           </tr>
         </tbody>
       </table>
-      <div>
-        <button onClick={() => navigate('/checkout')}>Proceed to Checkout</button>
-      </div>
+
     </div>
   );
 };

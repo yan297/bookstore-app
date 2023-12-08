@@ -1,6 +1,4 @@
 import React from 'react';
-//import Register from './components/Register';
-//import Login from './components/Login';
 import Join from './components/Join.jsx';
 import Home from './components/Homepage.jsx'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -10,6 +8,7 @@ import BookDetail from './components/BookDetail.jsx';
 import Member from './components/Member.jsx';
 import Cart from './components/Cart.jsx';
 import Admin from './components/Admin.jsx';
+import Checkout from './components/Checkout .jsx';
 
 function App() {
   return (
@@ -23,12 +22,11 @@ function App() {
         <Route path="/member" element={<Member />} />
         <Route path="/cart" element={<Cart />}/>
         <Route path="/admin" element={<Admin />}/>
+        <Route path="/checkout/:bookIds" element={<Checkout />} />
+
       </Routes>
     </Router>
   );
 }
   
 export default App;
-//      <Register />
-//      <Login />
-//      <Join />

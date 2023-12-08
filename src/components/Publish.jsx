@@ -5,6 +5,7 @@ import './css/index.css'
 const PublishBook = () => {
   const [bookData, setBookData] = useState({
     title: '',
+    author: '',
     image: '',
     quantity: 0,
     originalPrice: 0,
@@ -76,6 +77,11 @@ const PublishBook = () => {
       <p>
         <label>Title:
           <input type="text" name="title" value={bookData.title} onChange={handleInputChange} />
+        </label>
+      </p>
+      <p>
+        <label>Author:
+          <input type="text" name="author" value={bookData.author} onChange={handleInputChange} />
         </label>
       </p>
       <p>

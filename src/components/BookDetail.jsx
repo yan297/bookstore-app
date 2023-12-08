@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {useNavigate , useParams } from 'react-router-dom';
 import './css/index.css';
-
+import './css/detail.css';
 
 const BookDetail = ({ location }) => {
   const [bookDetails, setBookDetails] = useState(null);

@@ -1,0 +1,51 @@
+.main-left {
+	display: flex;
+	flex-direction: column; /* 堆叠方向改为垂直 */
+	justify-content: center; /* 水平居中 */
+	align-items: center; /* 垂直居中 */
+	height: 100vh; /* 高度设置为视口高度的100% */
+	width: 100vw; /* 宽度设置为视口宽度的100% */
+	padding: 0; /* 重置内边距 */
+  }
+  
+  #center.disp {
+	display: flex;
+	flex-direction: row; /* 设置为水平布局 */
+	align-items: center; /* 垂直居中子元素 */
+	justify-content: center; /* 水平居中子元素 */
+	width: auto; /* 宽度按内容自适应 */
+  }
+  
+  .zoom-wrap {
+	display: flex;
+	flex-direction: column; /* 内容垂直排列 */
+	align-items: center; /* 垂直居中 */
+	width: 100%; /* 宽度占满容器 */
+  }
+  .description {
+	width: 50vw; /* 设置宽度为视口宽度的50% */
+	max-width: 50vw; /* 确保宽度不会超过50% */
+	margin: 0 auto; /* 上下保持原样，左右自动（居中） */
+	
+  }
+  
+  
+  .attr {
+	text-align: center; /* 文本居中对齐 */
+  }
+  
+  button {
+	padding: 10px 20px; /* 增加按钮的内边距 */
+	border: none; /* 移除边框 */
+	background-color: #F6AB11; /* 背景颜色 */
+	color: white; /* 字体颜色 */
+	border-radius: 5px; /* 圆角边框 */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+	cursor: pointer; /* 鼠标悬停时显示指针 */
+	transition: all 0.3s ease; /* 过渡效果 */
+  }
+  
+  button:hover {
+	background-color: #e59a0f; /* 鼠标悬停时的背景颜色 */
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 鼠标悬停时的阴影 */
+  }

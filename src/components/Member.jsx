@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './css/index.css'; 
+import './css/member.css'; 
 
 const Member = () => {
   const [userData, setUserData] = useState({
@@ -112,9 +113,9 @@ const Member = () => {
   };
 
   return (
-    <div className="help-r fr">
-      <div className="help-item-title">个人信息</div>
-      <div className="help-main">
+<div className="user-info-container">
+        <div className="section-title">个人信息</div>
+      <div className="user-info-main">
         <form onSubmit={handleFormSubmit}>
           <p>
             <span className="nice">用户名：</span>
@@ -156,11 +157,11 @@ const Member = () => {
               onChange={handleInputChange}
             />
           </p>
-          <input className="save" type="submit" value="修改信息" />
+          <input className="user-info-submit" type="submit" value="修改信息" />
         </form>
       </div>
-      <div className="help-item-title">修改密码</div>
-      <div className="help-main">
+      <div className="user-info-main">修改密码
+
       <form onSubmit={handlePasswordSubmit}>
       <p>
             <span className="nice">原密码：</span>
@@ -189,11 +190,11 @@ const Member = () => {
               onChange={handlePasswordInputChange}
             />
           </p>
-          <input className="save" type="submit" value="修改密码" />
+          <input className="user-info-submit" type="submit" value="修改密码" />
       </form>
       {renderMessage()} {/* Render the message */}
       </div>
-    </div>
+      </div>
   );
 };
 

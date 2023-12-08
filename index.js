@@ -3,7 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const userRoutes = require('./routes/userRoutes'); // 这里填写你的 userRoutes 文件路径
+const userRoutes = require('./routes/userRoutes'); // userRoutes 文件路径
 
 app.use(cors()); // 使用 CORS 中间件解决跨域问题
 

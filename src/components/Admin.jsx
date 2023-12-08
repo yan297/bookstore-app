@@ -4,7 +4,15 @@ const Admin = () => {
   const [userList, setUserList] = useState([]);
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:4000/users/getuserlist');
+      const token = localStorage.getItem('token'); // 从 localStorage 中获取 token
+  
+      const response = await fetch('http://localhost:4000/users/getuserlist', {
+        headers: {
+          Authorization: `Bearer ${token}`, // 设置请求头部信息带有 token
+        },
+      });
+  
+
       const data = await response.json();
       setUserList(data);
     } catch (error) {

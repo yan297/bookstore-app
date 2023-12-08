@@ -5,6 +5,7 @@ const router = express.Router();
 const { Pool } = require('pg');
 const jwt = require('jsonwebtoken');
 const secretKey = '123456';
+const bcrypt = require('bcrypt');
 
 // 创建 PostgreSQL 数据库连接池
 const pool = new Pool({
@@ -26,13 +27,15 @@ router.post('/register', async (req, res) => {
     if (checkResult.rows.length > 0) {
       res.status(409).json({ error: '用户ID已存在！' });
     }else {
-
+// 生成一个随机的盐并使用bcrypt对密码进行哈希加密
+  const saltRounds = 10; // 加密的强度（成本因子）
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
     // 将用户信息插入到数据库中的 users 表中
     const insertQuery = `
       INSERT INTO users (userid, password, email, country, province, city)
       VALUES ($1, $2, $3, $4, $5, $6)
     `;
-    const values = [userid, password, email, country, province, city];
+    const values = [userid, hashedPassword, email, country, province, city];
     await pool.query(insertQuery, values);
 
     res.status(200).json({ message: '用户注册成功！' });
@@ -72,8 +75,15 @@ router.post('/login', async (req, res) => {
 // 获取书籍列表的路由处理程序
 router.get('/books', async (req, res) => {
   try {
+    const { author } = req.query; // Get the 'author' parameter from the query
+
     // 从数据库中获取书籍列表
+    
     const query = 'SELECT * FROM books'; // 假设你有一个名为 books 的表来存储书籍信息
+    if (author) {
+      query = `SELECT * FROM books WHERE author ILIKE '%${author}%'`; // Modify the query to filter by author
+    }
+
     const { rows } = await pool.query(query);
 
     res.status(200).json(rows);
@@ -83,15 +93,15 @@ router.get('/books', async (req, res) => {
 });
 // 添加书籍的路由处理程序
 router.post('/books/add', async (req, res) => {
-  const { title, image, quantity, originalPrice, discountedPrice } = req.body;
+  const { title, image, quantity, originalPrice, discountedPrice, author } = req.body;
 
   try {
-    // 将书籍信息插入到数据库中的 books 表中
+    // 将书籍信息插入到数据库中的 books 表中，包括作者信息
     const insertQuery = `
-      INSERT INTO books (title, image, quantity, originalPrice, discountedPrice)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO books (title, image, quantity, originalPrice, discountedPrice, author)
+      VALUES ($1, $2, $3, $4, $5, $6)
     `;
-    const values = [title, image, quantity, originalPrice, discountedPrice];
+    const values = [title, image, quantity, originalPrice, discountedPrice, author];
     await pool.query(insertQuery, values);
 
     res.status(200).json({ message: '书籍添加成功！' });
@@ -99,6 +109,7 @@ router.post('/books/add', async (req, res) => {
     res.status(500).json({ error: '添加书籍失败，请重试！' });
   }
 });
+
 
 router.get('/userInfo', async (req, res) => {
   //console.log('找到路由');
@@ -207,7 +218,7 @@ router.post('/addcart', async (req, res) => {
     const values = [userId, bookId, quantity];
     await pool.query(insertQuery, values);
 
-    console.log('Book added to cart successfully');
+    //console.log('Book added to cart successfully');
     res.status(200).json({ message: 'Book added to cart successfully' });
   } catch (error) {
     console.error('Error adding book to cart:', error);
@@ -286,13 +297,23 @@ router.delete('/removeFromCart/:bookId', async (req, res) => {
 
 // GET 请求，获取用户列表
 router.get('/getuserlist', async (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ error: '没有提供 Token！' });
+  }
   try {
+    const decoded = jwt.verify(token.replace('Bearer ', ''), secretKey);
+    const userid = decoded.userid;
+// 假设管理员的用户ID是 '123456'，根据这个条件判断是否是管理员
+if (userid === '123456') {
     // 从数据库中获取用户列表数据
     const query = 'SELECT userid, email, identity FROM users'; // 根据你的数据库表结构定义查询语句
     const { rows } = await pool.query(query);
     //console.log(rows);
     // 将查询到的用户列表数据发送给前端
-    res.status(200).json(rows);
+    res.status(200).json(rows);}
+    else{
+      res.status(403).json({ error: '您没有权限访问管理员页面！' });}
   } catch (error) {
     console.error('Error fetching user list:', error);
     res.status(500).json({ error: '获取用户列表失败！' });
