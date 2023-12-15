@@ -77,7 +77,7 @@ const Home = () => {
   // Use useEffect to fetch books initially or when certain dependencies change
   useEffect(() => {
     // Fetch books for a default category initially, e.g., 'Computer'
-    fetchBooks('Science');
+    fetchBooks('Opera');
   }, []); // Empty dependency array ensures this effect runs only once on component mount
 
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token')); // 根据 token 存在与否设定登录状态
@@ -171,7 +171,7 @@ const Home = () => {
 		</h1>
 		<div class="list fl">
 			<ul class="one">
-      <li><a href="#" onClick={() => handleCategoryClick('Biology')}>Biology</a></li>
+      <li><a href="#" onClick={() => handleCategoryClick('Opera')}>Opear</a></li>
       <li><a href="#" onClick={() => handleCategoryClick('Science')}>Science</a></li>
       <li><a href="#" onClick={() => handleCategoryClick('Art')}>Art</a></li>
       <li><a href="#" onClick={() => handleCategoryClick('Chinese')}>Chinese</a></li>
